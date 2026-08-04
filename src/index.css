@@ -1,0 +1,898 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #242222;
+}
+
+@keyframes achievementPopup {
+
+  0% {
+    opacity: 0;
+    transform: translateX(-120px);
+  }
+
+
+  15% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+
+  32% {
+    opacity: 1;
+  }
+
+
+  100% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+}
+
+
+.achievement-popup {
+
+  animation:
+    achievementPopup
+    6.23s
+    ease-in-out
+    forwards;
+
+}
+
+@keyframes floatingText {
+
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+
+  100% {
+
+    opacity: 0;
+
+    transform:
+      translateY(-80px)
+      scale(1.2);
+
+  }
+
+}
+
+
+
+.animate-floatingText {
+
+  animation:
+    floatingText
+    1s
+    ease-out
+    forwards;
+
+}
+
+
+
+@keyframes particle {
+
+
+  0% {
+
+    opacity: 1;
+
+    transform:
+      translate(0,0)
+      scale(1);
+
+  }
+
+
+  100% {
+
+    opacity: 0;
+
+    transform:
+      translate(
+        calc(
+          (random() - .5) * 100px
+        ),
+        -80px
+      )
+      scale(0);
+
+  }
+
+}
+
+
+
+.animate-particle {
+
+  animation:
+    particle
+    .8s
+    ease-out
+    forwards;
+
+}
+
+
+
+@keyframes slideNotification {
+
+
+  from {
+
+    opacity:0;
+
+    transform:
+      translateX(80px);
+
+  }
+
+
+  to {
+
+    opacity:1;
+
+    transform:
+      translateX(0);
+
+  }
+
+}
+
+
+
+.animate-slideNotification {
+
+  animation:
+    slideNotification
+    .4s
+    ease-out;
+
+}
+
+input[type="range"]::-webkit-slider-thumb {
+
+  appearance: none;
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition: transform .15s ease;
+
+}
+
+
+input[type="range"]::-webkit-slider-thumb:hover {
+
+  transform: scale(1.2);
+
+}
+
+
+input[type="range"]::-moz-range-thumb {
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  cursor: pointer;
+
+}
+
+input[type="range"] {
+  height: 20px;
+}
+
+
+input[type="range"]::-webkit-slider-thumb {
+
+  appearance: none;
+
+  width: 20px;
+
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition:
+    transform .15s ease;
+
+}
+
+
+input[type="range"]::-webkit-slider-thumb:hover {
+
+  transform: scale(1.15);
+
+}
+
+
+input[type="range"]::-moz-range-thumb {
+
+  width: 20px;
+
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  cursor: pointer;
+
+}
+
+@keyframes floatingText {
+
+  0% {
+    opacity: 1;
+    transform: translate(-50%,0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%,-90px) scale(1.15);
+  }
+
+}
+
+
+.animate-floatingText {
+
+  animation:
+    floatingText 0.9s ease-out forwards;
+
+}
+
+
+
+@keyframes pop {
+
+  0% {
+    transform:scale(.5);
+  }
+
+  50% {
+    transform:scale(1.25);
+  }
+
+  100% {
+    transform:scale(1);
+  }
+
+}
+
+
+.animate-pop {
+
+  animation:
+    pop .18s ease-out;
+
+}
+
+@keyframes particle {
+
+  0% {
+
+    opacity:1;
+
+    transform:
+      translate(0,0)
+      scale(1);
+
+  }
+
+
+  100% {
+
+    opacity:0;
+
+    transform:
+      translate(var(--x),var(--y))
+      scale(0);
+
+  }
+
+}
+
+
+
+.animate-particle {
+
+  animation:
+    particle .55s ease-out forwards;
+
+}
+
+@keyframes fadeIn {
+
+  from {
+    opacity:0;
+  }
+
+  to {
+    opacity:1;
+  }
+
+}
+
+
+
+@keyframes menuPop {
+
+  from {
+
+    opacity:0;
+
+    transform:
+      scale(0.85)
+      translateY(20px);
+
+  }
+
+
+  to {
+
+    opacity:1;
+
+    transform:
+      scale(1)
+      translateY(0);
+
+  }
+
+}
+
+
+
+.animate-fadeIn {
+
+  animation:
+    fadeIn
+    0.2s
+    ease-out;
+
+}
+
+
+
+.animate-menuPop {
+
+  animation:
+    menuPop
+    0.25s
+    ease-out;
+
+}
+
+@keyframes cardSlide {
+
+  from {
+
+    opacity:0;
+
+    transform:
+      translateX(-20px);
+
+  }
+
+
+  to {
+
+    opacity:1;
+
+    transform:
+      translateX(0);
+
+  }
+
+}
+
+
+.animate-cardSlide {
+
+  animation:
+    cardSlide
+    0.25s
+    ease-out;
+
+}
+
+@keyframes particle {
+  from {
+    transform: translate(0,0) scale(1);
+    opacity:1;
+  }
+
+  to {
+    transform:
+      translate(var(--x), var(--y))
+      scale(0);
+
+    opacity:0;
+  }
+}
+
+
+.animate-particle {
+  animation: particle 0.8s ease-out forwards;
+}
+
+@keyframes floatingText {
+
+  0% {
+    opacity: 0;
+    transform:
+      translateY(20px)
+      scale(0.6);
+  }
+
+
+  20% {
+    opacity:1;
+    transform:
+      translateY(0)
+      scale(1.1);
+  }
+
+
+  100% {
+
+    opacity:0;
+
+    transform:
+      translateY(-90px)
+      scale(1);
+
+  }
+
+}
+
+
+.animate-floatingText {
+
+  animation:
+    floatingText
+    1s
+    ease-out
+    forwards;
+
+}
+
+@keyframes ripple {
+
+  from {
+    transform:scale(0.7);
+    opacity:0.8;
+  }
+
+  to {
+    transform:scale(1.5);
+    opacity:0;
+  }
+
+}
+
+
+.animate-ripple {
+
+  animation:
+    ripple
+    .5s
+    ease-out
+    forwards;
+
+}
+
+@keyframes clickShake {
+
+  0% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(-5px, 3px);
+  }
+
+  40% {
+    transform: translate(5px, -3px);
+  }
+
+  60% {
+    transform: translate(-4px, 2px);
+  }
+
+  80% {
+    transform: translate(4px, -2px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+
+}
+
+
+.click-shake {
+
+  animation:
+    clickShake
+    .25s
+    ease;
+
+}
+
+
+
+@keyframes clickFlash {
+
+  from {
+
+    opacity: .8;
+
+  }
+
+
+  to {
+
+    opacity:0;
+
+  }
+
+}
+
+
+.click-flash {
+
+  animation:
+
+    clickFlash
+
+    .3s
+
+    ease-out;
+
+}
+
+@keyframes clickShake {
+
+  0% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(-5px,3px);
+  }
+
+  40% {
+    transform: translate(5px,-3px);
+  }
+
+  60% {
+    transform: translate(-4px,2px);
+  }
+
+  80% {
+    transform: translate(4px,-2px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+
+}
+
+
+.click-shake {
+
+  animation:
+    clickShake
+    .25s
+    ease;
+
+}
+
+
+
+
+@keyframes clickFlash {
+
+  from {
+
+    opacity:.8;
+
+  }
+
+
+  to {
+
+    opacity:0;
+
+  }
+
+}
+
+
+
+.click-flash {
+
+  animation:
+
+    clickFlash
+
+    .3s
+
+    ease-out;
+
+}
+
+@keyframes menuFade {
+
+  from {
+    opacity:0;
+  }
+
+  to {
+    opacity:1;
+  }
+
+}
+
+
+
+@keyframes menuScale {
+
+  from {
+
+    opacity:0;
+
+    transform:
+      scale(.9)
+      translateY(20px);
+
+  }
+
+
+  to {
+
+    opacity:1;
+
+    transform:
+      scale(1)
+      translateY(0);
+
+  }
+
+}
+
+
+
+.animate-menuFade {
+
+  animation:
+    menuFade
+    .2s
+    ease-out;
+
+}
+
+
+
+.animate-menuScale {
+
+  animation:
+    menuScale
+    .25s
+    ease-out;
+
+}
+
+@keyframes notificationPop {
+
+  from {
+
+    opacity:0;
+
+    transform:
+      translateX(40px)
+      scale(.8);
+
+  }
+
+
+  to {
+
+    opacity:1;
+
+    transform:
+      translateX(0)
+      scale(1);
+
+  }
+
+}
+
+
+
+.animate-notification {
+
+  animation:
+    notificationPop
+    .3s
+    ease-out;
+
+}
+
+@keyframes buttonIdle {
+
+  0%,100% {
+
+    transform:scale(1);
+
+  }
+
+  50% {
+
+    transform:scale(1.03);
+
+  }
+
+}
+
+
+.animate-buttonIdle {
+
+  animation:
+    buttonIdle 3s ease-in-out infinite;
+
+}
+
+
+@keyframes clickFlash {
+
+  from {
+
+    opacity:.8;
+    transform:scale(.8);
+
+  }
+
+
+  to {
+
+    opacity:0;
+    transform:scale(1.2);
+
+  }
+
+}
+
+
+.animate-clickFlash {
+
+  animation:
+    clickFlash .25s ease-out;
+
+}
+
+
+@keyframes spinSlow {
+
+  from {
+
+    transform:rotate(0deg);
+
+  }
+
+
+  to {
+
+    transform:rotate(360deg);
+
+  }
+
+}
+
+
+.animate-spin-slow {
+
+  animation:
+    spinSlow 12s linear infinite;
+
+}
+
+@keyframes floatingText {
+
+  0% {
+
+    opacity:0;
+
+    transform:
+      translateY(20px)
+      scale(.6);
+
+  }
+
+
+  15% {
+
+    opacity:1;
+
+  }
+
+
+  100% {
+
+    opacity:0;
+
+    transform:
+
+      translateY(-100px)
+      scale(1.15);
+
+  }
+
+}
+
+
+
+.animate-floatingText {
+
+  animation:
+
+    floatingText
+
+    1s
+
+    ease-out
+
+    forwards;
+
+}
+
+@keyframes hudAppear {
+
+  from {
+    opacity:0;
+    transform:translateY(-10px);
+  }
+
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+
+.animate-hudAppear {
+
+  animation:
+    hudAppear .35s ease-out;
+
+}
