@@ -130,13 +130,14 @@ const defaultGame = {
 
     },
 
+
     offline:{
 
-  enabled:true,
+      enabled:true,
 
-  maxHours:8,
+      maxHours:8,
 
-  multiplier:1
+      multiplier:1
 
     }
 
@@ -190,6 +191,7 @@ function mergeGame(saved){
 
       },
 
+
       offline:{
 
         ...defaultGame.settings.offline,
@@ -204,50 +206,12 @@ function mergeGame(saved){
 
 }
 
-function claimOfflineReward(){
-
-
-  if(!offlineReward){
-
-    return;
-
-  }
 
 
 
-  setGame(previous=>({
-
-
-    ...previous,
-
-
-    money:
-
-      previous.money +
-
-      offlineReward.amount,
 
 
 
-    totalMoneyEarned:
-
-      previous.totalMoneyEarned +
-
-      offlineReward.amount
-
-
-  }));
-
-
-
-  setOfflineReward(null);
-
-
-
-  requestCloudSave();
-
-
-}
 
 export default function GameProvider({
 
@@ -305,6 +269,8 @@ export default function GameProvider({
 
     useState(false);
 
+
+
   const [offlineReward,setOfflineReward] =
 
     useState(null);
@@ -331,6 +297,7 @@ export default function GameProvider({
 
 
 
+
   useEffect(()=>{
 
 
@@ -339,11 +306,7 @@ export default function GameProvider({
 
   },[game]);
 
-
-
-
-
-  useEffect(()=>{
+    useEffect(()=>{
 
 
     async function loadCloud(){
@@ -368,7 +331,6 @@ export default function GameProvider({
           user.id
 
         );
-
 
 
 
@@ -407,7 +369,6 @@ export default function GameProvider({
 
 
 
-
     setCloudLoaded(false);
 
 
@@ -417,123 +378,121 @@ export default function GameProvider({
 
   },[user]);
 
-    function applyOfflineProgress(currentGame){
-
-
-  const now = Date.now();
 
 
 
-  const last =
-
-    currentGame.lastActive ||
-
-    now;
 
 
 
-  const secondsAway =
 
-    Math.floor(
+  function applyOfflineProgress(currentGame){
 
-      (now - last) / 1000
 
-    );
+    const now = Date.now();
+
+
+
+    const last =
+
+      currentGame.lastActive ||
+
+      now;
+
+
+
+    const secondsAway =
+
+      Math.floor(
+
+        (now - last) / 1000
+
+      );
+
+
 
     const maxSeconds =
 
-  currentGame.settings.offline.maxHours *
+      currentGame.settings.offline.maxHours *
 
-  60 *
+      60 *
 
-  60;
-
-
-
-const cappedSeconds =
-
-  Math.min(
-
-    secondsAway,
-
-    maxSeconds
-
-  );
-
-    const maxSeconds =
-  currentGame.settings.offline.maxHours * 60 * 60;
-
-
-const cappedSeconds =
-  Math.min(
-    secondsAway,
-    maxSeconds
-  );
+      60;
 
 
 
-  if(secondsAway <= 10){
+    const cappedSeconds =
 
+      Math.min(
 
-    currentGame.lastActive = now;
+        secondsAway,
 
+        maxSeconds
 
-    return currentGame;
-
-
-  }
-
-
-
-  const cps =
-
-    calculateCPS(currentGame);
+      );
 
 
 
-  const earned =
+    if(
 
-  cps *
+      secondsAway <= 10 ||
 
-  cappedSeconds *
+      !currentGame.settings.offline.enabled
 
-  currentGame.settings.offline.multiplier;
-
-
-
-  if(earned <= 0){
+    ){
 
 
-    currentGame.lastActive = now;
+      currentGame.lastActive = now;
 
 
-    return currentGame;
+      return currentGame;
 
 
-  }
+    }
 
 
 
-  setOfflineReward({
+    const cps =
 
-    amount: earned,
+      calculateCPS(
 
-    seconds: secondsAway
+        currentGame
 
-  });
-
-
-
-  return {
+      );
 
 
-    ...currentGame,
+
+    const earned =
+
+      cps *
+
+      cappedSeconds *
+
+      currentGame.settings.offline.multiplier;
 
 
-    lastActive: now
+
+    if(earned <= 0){
 
 
-  };
+      currentGame.lastActive = now;
+
+
+      return currentGame;
+
+
+    }
+
+
+
+    setOfflineReward({
+
+      amount:earned,
+
+      seconds:cappedSeconds
+
+    });
+
+
 
     addNotification(
 
@@ -553,25 +512,65 @@ const cappedSeconds =
       ...currentGame,
 
 
-      money:
+      lastActive:now
 
-        currentGame.money + earned,
-
-
-      totalMoneyEarned:
-
-        currentGame.totalMoneyEarned + earned,
-
-
-      lastActive:
-
-        now
 
     };
 
 
   }
 
+
+
+
+
+
+
+
+  function claimOfflineReward(){
+
+
+    if(!offlineReward){
+
+      return;
+
+    }
+
+
+
+    setGame(previous=>({
+
+
+      ...previous,
+
+
+      money:
+
+        previous.money +
+
+        offlineReward.amount,
+
+
+
+      totalMoneyEarned:
+
+        previous.totalMoneyEarned +
+
+        offlineReward.amount
+
+
+    }));
+
+
+
+    setOfflineReward(null);
+
+
+
+    requestCloudSave();
+
+
+  }
 
 
 
@@ -609,7 +608,6 @@ const cappedSeconds =
 
 
 
-
     if(user){
 
 
@@ -640,7 +638,6 @@ const cappedSeconds =
 
 
   }
-
 
 
 
@@ -699,10 +696,6 @@ const cappedSeconds =
 
 
 
-      requestCloudSave();
-
-
-
       const result =
 
         checkAchievements(
@@ -710,6 +703,10 @@ const cappedSeconds =
           updated
 
         );
+
+
+
+      requestCloudSave();
 
 
 
@@ -731,6 +728,13 @@ const cappedSeconds =
 
 
   }
+
+
+
+
+
+
+
 
   function click(){
 
@@ -778,6 +782,13 @@ const cappedSeconds =
 
 
   }
+
+
+
+
+
+
+
 
   function generateMoney(){
 
@@ -830,13 +841,19 @@ const cappedSeconds =
 
   }
 
-    useEffect(()=>{
+
+
+
+
+
+
+
+  useEffect(()=>{
 
 
     const backup =
 
       setInterval(
-
 
         ()=>{
 
@@ -846,9 +863,7 @@ const cappedSeconds =
 
         },
 
-
         30000
-
 
       );
 
@@ -876,14 +891,12 @@ const cappedSeconds =
 
 
 
-
   useEffect(()=>{
 
 
     const timer =
 
       setInterval(
-
 
         ()=>{
 
@@ -893,9 +906,7 @@ const cappedSeconds =
 
         },
 
-
         1000
-
 
       );
 
@@ -915,7 +926,6 @@ const cappedSeconds =
 
 
   },[]);
-
 
 
 
@@ -963,8 +973,6 @@ const cappedSeconds =
 
 
 
-
-
     window.addEventListener(
 
       "beforeunload",
@@ -974,6 +982,326 @@ const cappedSeconds =
     );
 
 
+
+    return ()=>{
+
+
+      window.removeEventListener(
+
+        "beforeunload",
+
+        closeGame
+
+      );
+
+
+    };
+
+
+  },[user]);
+
+    function updateGame(action){
+
+
+    setGame(previous=>{
+
+
+      const updated =
+
+        action(previous);
+
+
+
+      updated.lastActive =
+
+        Date.now();
+
+
+
+      const result =
+
+        checkAchievements(
+
+          updated
+
+        );
+
+
+
+      requestCloudSave();
+
+
+
+      return {
+
+
+        ...updated,
+
+
+        achievements:
+
+          result.unlocked
+
+
+      };
+
+
+    });
+
+
+  }
+
+
+
+
+
+
+
+
+  function click(){
+
+
+    updateGame(previous=>{
+
+
+      const amount =
+
+        calculateClickValue(
+
+          previous
+
+        );
+
+
+
+      return {
+
+
+        ...previous,
+
+
+        money:
+
+          previous.money + amount,
+
+
+
+        totalClicks:
+
+          previous.totalClicks + 1,
+
+
+
+        totalMoneyEarned:
+
+          previous.totalMoneyEarned + amount
+
+
+      };
+
+
+    });
+
+
+  }
+
+
+
+
+
+
+
+
+  function generateMoney(){
+
+
+    updateGame(previous=>{
+
+
+      const amount =
+
+        calculateCPS(
+
+          previous
+
+        );
+
+
+
+      if(amount <= 0){
+
+
+        return previous;
+
+
+      }
+
+
+
+      return {
+
+
+        ...previous,
+
+
+        money:
+
+          previous.money + amount,
+
+
+
+        totalMoneyEarned:
+
+          previous.totalMoneyEarned + amount
+
+
+      };
+
+
+    });
+
+
+  }
+
+
+
+
+
+
+
+
+  useEffect(()=>{
+
+
+    const backup =
+
+      setInterval(
+
+        ()=>{
+
+
+          save();
+
+
+        },
+
+        30000
+
+      );
+
+
+
+    return ()=>{
+
+
+      clearInterval(
+
+        backup
+
+      );
+
+
+    };
+
+
+  },[user]);
+
+
+
+
+
+
+
+
+  useEffect(()=>{
+
+
+    const timer =
+
+      setInterval(
+
+        ()=>{
+
+
+          generateMoney();
+
+
+        },
+
+        1000
+
+      );
+
+
+
+    return ()=>{
+
+
+      clearInterval(
+
+        timer
+
+      );
+
+
+    };
+
+
+  },[]);
+
+
+
+
+
+
+
+
+  useEffect(()=>{
+
+
+    function closeGame(){
+
+
+      gameRef.current.lastActive =
+
+        Date.now();
+
+
+
+      saveGame(
+
+        gameRef.current
+
+      );
+
+
+
+      if(user){
+
+
+        saveCloudGame(
+
+          user.id,
+
+          gameRef.current
+
+        );
+
+
+      }
+
+
+    }
+
+
+
+    window.addEventListener(
+
+      "beforeunload",
+
+      closeGame
+
+    );
 
 
 
@@ -1022,7 +1350,6 @@ const cappedSeconds =
 
 
     }
-
     else{
 
 
@@ -1038,7 +1365,6 @@ const cappedSeconds =
     game.settings.audio.musicEnabled
 
   ]);
-
 
 
 
@@ -1070,7 +1396,6 @@ const cappedSeconds =
 
 
 
-
   function updateSetting(
 
     category,
@@ -1082,45 +1407,34 @@ const cappedSeconds =
   ){
 
 
-
     setGame(previous=>({
-
 
 
       ...previous,
 
 
-
       settings:{
-
 
 
         ...previous.settings,
 
 
-
         [category]:{
-
 
 
           ...previous.settings[category],
 
 
-
           [setting]:value
-
 
 
         }
 
 
-
       }
 
 
-
     }));
-
 
 
 
@@ -1129,14 +1443,87 @@ const cappedSeconds =
 
   }
 
-    return (
+
+
+
+
+
+
+
+  function addNotification(
+
+    title,
+
+    description,
+
+    type="info"
+
+  ){
+
+
+    const id =
+
+      Date.now();
+
+
+
+    setNotifications(old=>[
+
+
+      ...old,
+
+      {
+
+        id,
+
+        title,
+
+        description,
+
+        type
+
+      }
+
+
+    ]);
+
+
+
+    setTimeout(()=>{
+
+
+      setNotifications(old=>
+
+        old.filter(
+
+          item=>
+
+            item.id !== id
+
+        )
+
+      );
+
+
+    },3000);
+
+
+  }
+
+
+
+
+
+
+
+
+  return (
 
     <GameContext.Provider
 
       value={{
 
         game,
-
 
         setGame,
 
@@ -1152,10 +1539,11 @@ const cappedSeconds =
 
         updateSetting,
 
+
         offlineReward,
 
-        claimOfflineReward,
 
+        claimOfflineReward,
 
 
         cps:
@@ -1163,99 +1551,27 @@ const cappedSeconds =
           calculateCPS(game),
 
 
-
         stats:
 
           calculatePlayerStats(game),
 
 
-
         notifications,
 
 
-
-        addNotification:
-
-          (
-
-            title,
-
-            description,
-
-            type="info"
-
-          )=>{
+        addNotification,
 
 
-            const id =
-
-              Date.now();
+        saving
 
 
-
-            setNotifications(old=>[
-
-
-              ...old,
-
-              {
-
-                id,
-
-                title,
-
-                description,
-
-                type
-
-              }
-
-
-            ]);
-
-
-
-            setTimeout(()=>{
-
-
-              setNotifications(old=>
-
-                old.filter(
-
-                  item=>
-
-                    item.id !== id
-
-                )
-
-              );
-
-
-            },3000);
-
-
-
-          },
-
-
-
-          saving,
-
-          offlineReward,
-
-          claimOfflineReward
-
-}}
-
+      }}
 
     >
 
-
       {children}
 
-
     </GameContext.Provider>
-
 
   );
 
