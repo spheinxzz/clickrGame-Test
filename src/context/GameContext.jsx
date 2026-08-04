@@ -59,66 +59,42 @@ export const GameContext =
 
 
 
-
 const defaultGame = {
 
   money:0,
-
   gems:0,
-
   level:1,
 
   totalClicks:0,
-
   totalMoneyEarned:0,
 
   upgrades:{},
-
   passiveUpgrades:{},
 
   achievements:{},
-
   claimedAchievements:{},
-
 
   settings:{
 
     audio:{
-
       masterVolume:100,
-
       musicVolume:80,
-
       musicEnabled:false,
-
       clickSounds:true
-
     },
-
 
     hud:{
-
       hudScale:100,
-
       showMoney:true,
-
       showGems:true,
-
       showLevel:true
-
     },
 
-
     effects:{
-
       particles:true,
-
       floatingText:true,
-
       clickAnimation:true,
-
       glowEffects:true
-
     }
 
   }
@@ -137,49 +113,21 @@ function mergeGame(saved){
 
     ...saved,
 
-
-    upgrades:{
-      ...defaultGame.upgrades,
-      ...saved.upgrades
-    },
-
-
-    passiveUpgrades:{
-      ...defaultGame.passiveUpgrades,
-      ...saved.passiveUpgrades
-    },
-
-
-    achievements:{
-      ...defaultGame.achievements,
-      ...saved.achievements
-    },
-
-
-    claimedAchievements:{
-      ...defaultGame.claimedAchievements,
-      ...saved.claimedAchievements
-    },
-
-
     settings:{
 
       ...defaultGame.settings,
 
       ...saved.settings,
 
-
       audio:{
         ...defaultGame.settings.audio,
         ...saved.settings?.audio
       },
 
-
       hud:{
         ...defaultGame.settings.hud,
         ...saved.settings?.hud
       },
-
 
       effects:{
         ...defaultGame.settings.effects,
@@ -196,10 +144,10 @@ function mergeGame(saved){
 
 
 
+
+
 export default function GameProvider({
-
   children
-
 }){
 
 
@@ -209,19 +157,19 @@ export default function GameProvider({
 
 
 
-  const [game,setGame] = useState(()=>{
+  const [game,setGame] =
+    useState(()=>{
 
-    const saved =
-      loadGame();
+      const saved =
+        loadGame();
 
+      return saved
+        ?
+        mergeGame(saved)
+        :
+        defaultGame;
 
-    return saved
-      ?
-      mergeGame(saved)
-      :
-      defaultGame;
-
-  });
+    });
 
 
 
@@ -245,6 +193,13 @@ export default function GameProvider({
 
 
 
+  const cloudTimer =
+    useRef(null);
+
+
+
+
+
   useEffect(()=>{
 
     gameRef.current = game;
@@ -257,13 +212,10 @@ export default function GameProvider({
 
 
 
-
-
   useEffect(()=>{
 
 
     async function loadCloud(){
-
 
       if(!user){
 
@@ -274,11 +226,8 @@ export default function GameProvider({
       }
 
 
-
       const cloud =
-        await loadCloudGame(
-          user.id
-        );
+        await loadCloudGame(user.id);
 
 
 
@@ -291,9 +240,7 @@ export default function GameProvider({
       }
 
 
-
       setCloudLoaded(true);
-
 
     }
 
@@ -314,57 +261,59 @@ export default function GameProvider({
 
 
 
-  function addNotification(
+  async function save(){
 
-    title,
-
-    description,
-
-    type="info"
-
-  ){
-
-
-    const id =
-      Date.now();
+    saveGame(gameRef.current);
 
 
 
-    setNotifications(old=>[
+    if(user){
 
-      ...old,
-
-      {
-        id,
-        title,
-        description,
-        type
-      }
-
-    ]);
+      setSaving(true);
 
 
-
-    setTimeout(()=>{
-
-
-      setNotifications(old=>
-
-        old.filter(
-
-          item =>
-          item.id !== id
-
-        )
-
+      await saveCloudGame(
+        user.id,
+        gameRef.current
       );
 
 
-    },3000);
+      setTimeout(()=>{
 
+        setSaving(false);
+
+      },500);
+
+    }
 
   }
 
+
+
+
+
+
+
+  function requestCloudSave(){
+
+    saveGame(gameRef.current);
+
+
+
+    clearTimeout(
+      cloudTimer.current
+    );
+
+
+
+    cloudTimer.current = setTimeout(()=>{
+
+      save();
+
+    },2000);
+
+
+  }
 
 
 
@@ -384,32 +333,12 @@ export default function GameProvider({
 
 
 
+      requestCloudSave();
+
+
+
       const result =
         checkAchievements(updated);
-
-
-
-      if(result.newlyUnlocked?.length){
-
-
-        result.newlyUnlocked.forEach(item=>{
-
-
-          addNotification(
-
-            "Achievement Unlocked",
-
-            item.name,
-
-            "achievement"
-
-          );
-
-
-        });
-
-
-      }
 
 
 
@@ -424,6 +353,7 @@ export default function GameProvider({
 
 
     });
+
 
   }
 
@@ -450,14 +380,11 @@ export default function GameProvider({
 
         ...previous,
 
-
         money:
           previous.money + amount,
 
-
         totalClicks:
           previous.totalClicks + 1,
-
 
         totalMoneyEarned:
           previous.totalMoneyEarned + amount
@@ -501,10 +428,8 @@ export default function GameProvider({
 
         ...previous,
 
-
         money:
           previous.money + amount,
-
 
         totalMoneyEarned:
           previous.totalMoneyEarned + amount
@@ -525,74 +450,23 @@ export default function GameProvider({
 
 
 
-  async function save(){
-
-
-    if(!cloudLoaded){
-
-      return;
-
-    }
-
-
-
-    setSaving(true);
-
-
-
-    saveGame(game);
-
-
-
-    if(user){
-
-      await saveCloudGame(
-
-        user.id,
-
-        game
-
-      );
-
-    }
-
-
-
-    setTimeout(()=>{
-
-      setSaving(false);
-
-    },500);
-
-
-  }
-
-
-
-
-
-
-
-
-
   useEffect(()=>{
 
 
-    const timer =
+    const backup =
       setInterval(
 
         save,
 
-        10000
+        30000
 
       );
 
 
+    return ()=>clearInterval(backup);
 
-    return ()=>clearInterval(timer);
 
-
-  },[user,cloudLoaded]);
+  },[user]);
 
 
 
@@ -613,7 +487,6 @@ export default function GameProvider({
         1000
 
       );
-
 
 
     return ()=>clearInterval(timer);
@@ -640,7 +513,6 @@ export default function GameProvider({
       );
 
 
-
       if(user){
 
         saveCloudGame(
@@ -659,11 +531,8 @@ export default function GameProvider({
 
 
     window.addEventListener(
-
       "beforeunload",
-
       close
-
     );
 
 
@@ -672,11 +541,8 @@ export default function GameProvider({
 
 
       window.removeEventListener(
-
         "beforeunload",
-
         close
-
       );
 
 
@@ -702,18 +568,13 @@ export default function GameProvider({
 
 
     if(
-
-      game.settings.audio.musicEnabled &&
-      track
-
+      track &&
+      game.settings.audio.musicEnabled
     ){
 
       playMusic(
-
         track,
-
         game.settings.audio.musicVolume / 100
-
       );
 
     }
@@ -725,9 +586,7 @@ export default function GameProvider({
 
 
   },[
-
     game.settings.audio.musicEnabled
-
   ]);
 
 
@@ -742,16 +601,12 @@ export default function GameProvider({
 
 
     setMusicVolume(
-
       game.settings.audio.musicVolume / 100
-
     );
 
 
   },[
-
     game.settings.audio.musicVolume
-
   ]);
 
 
@@ -763,33 +618,22 @@ export default function GameProvider({
 
 
   function updateSetting(
-
     category,
-
     setting,
-
     value
-
   ){
-
 
     setGame(previous=>({
 
-
       ...previous,
-
 
       settings:{
 
-
         ...previous.settings,
-
 
         [category]:{
 
-
           ...previous.settings[category],
-
 
           [setting]:value
 
@@ -798,6 +642,9 @@ export default function GameProvider({
       }
 
     }));
+
+
+    requestCloudSave();
 
   }
 
@@ -835,7 +682,24 @@ export default function GameProvider({
 
         notifications,
 
-        addNotification,
+        addNotification:
+
+          (title,description,type="info")=>{
+
+            setNotifications(old=>[
+
+              ...old,
+
+              {
+                id:Date.now(),
+                title,
+                description,
+                type
+              }
+
+            ]);
+
+          },
 
         saving
 
