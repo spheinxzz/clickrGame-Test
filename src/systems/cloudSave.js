@@ -24,15 +24,25 @@ export async function saveCloudGame(
 
         .from("saves")
 
-        .upsert({
+        .upsert(
 
-          user_id:userId,
+          {
 
-          data:game,
+            user_id:userId,
 
-          updated_at:new Date()
+            data:game,
 
-        });
+            updated_at:new Date()
+
+          },
+
+          {
+
+            onConflict:"user_id"
+
+          }
+
+        );
 
 
 
@@ -106,11 +116,16 @@ export async function loadCloudGame(
           userId
         )
 
-        .single();
+        .maybeSingle();
 
 
 
     if(error){
+
+      console.error(
+        "Cloud load failed:",
+        error
+      );
 
       return null;
 
@@ -118,7 +133,7 @@ export async function loadCloudGame(
 
 
 
-    return data.data;
+    return data?.data ?? null;
 
 
   }
