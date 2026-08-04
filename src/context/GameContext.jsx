@@ -6,6 +6,16 @@ import React, {
 
 
 import {
+  useContext
+} from "react";
+
+
+import {
+  AuthContext
+} from "./AuthContext";
+
+
+import {
   checkAchievements
 } from "../systems/achievements";
 
@@ -20,6 +30,12 @@ import {
   saveGame,
   loadGame
 } from "../systems/saveSystem";
+
+
+import {
+  saveCloudGame,
+  loadCloudGame
+} from "../systems/cloudSave";
 
 
 import {
@@ -40,7 +56,8 @@ import {
 
 
 
-export const GameContext = createContext(null);
+export const GameContext =
+  createContext(null);
 
 
 
@@ -120,7 +137,6 @@ function mergeGame(saved){
     ...defaultGame,
 
     ...saved,
-
 
     upgrades:{
 
@@ -208,11 +224,18 @@ export default function GameProvider({
 }){
 
 
+  const {
+    user
+  } = useContext(AuthContext);
+
+
+
   const [game,setGame] = useState(()=>{
 
 
     const saved =
       loadGame();
+
 
 
     return saved
@@ -226,10 +249,60 @@ export default function GameProvider({
 
 
 
-  const [notifications,setNotifications] = useState([]);
+  const [notifications,setNotifications] =
+    useState([]);
 
 
-  const [saving,setSaving] = useState(false);
+
+  const [saving,setSaving] =
+    useState(false);
+
+
+
+
+
+  useEffect(()=>{
+
+
+    async function loadCloud(){
+
+
+      if(!user){
+
+        return;
+
+      }
+
+
+
+      const cloud =
+        await loadCloudGame(
+          user.id
+        );
+
+
+
+      if(cloud){
+
+        setGame(
+          mergeGame(cloud)
+        );
+
+      }
+
+
+    }
+
+
+
+    loadCloud();
+
+
+  },[user]);
+
+
+
+
 
 
 
@@ -256,15 +329,10 @@ export default function GameProvider({
       ...old,
 
       {
-
         id,
-
         title,
-
         description,
-
         type
-
       }
 
     ]);
@@ -279,7 +347,6 @@ export default function GameProvider({
         old.filter(
 
           item =>
-
           item.id !== id
 
         )
@@ -291,6 +358,9 @@ export default function GameProvider({
 
 
   }
+
+
+
 
 
 
@@ -313,9 +383,7 @@ export default function GameProvider({
 
 
 
-      if(
-        result.newlyUnlocked?.length
-      ){
+      if(result.newlyUnlocked?.length){
 
 
         result.newlyUnlocked.forEach(item=>{
@@ -359,6 +427,9 @@ export default function GameProvider({
 
 
 
+
+
+
   function click(){
 
 
@@ -373,7 +444,6 @@ export default function GameProvider({
       return {
 
         ...previous,
-
 
         money:
           previous.money + amount,
@@ -393,6 +463,9 @@ export default function GameProvider({
 
 
   }
+
+
+
 
 
 
@@ -422,7 +495,6 @@ export default function GameProvider({
 
         ...previous,
 
-
         money:
           previous.money + amount,
 
@@ -443,13 +515,31 @@ export default function GameProvider({
 
 
 
-  function save(){
+
+
+
+  async function save(){
 
 
     setSaving(true);
 
 
+
     saveGame(game);
+
+
+
+    if(user){
+
+      await saveCloudGame(
+
+        user.id,
+
+        game
+
+      );
+
+    }
 
 
 
@@ -463,6 +553,9 @@ export default function GameProvider({
 
 
   }
+
+
+
 
 
 
@@ -486,7 +579,10 @@ export default function GameProvider({
     return ()=>clearInterval(timer);
 
 
-  },[game]);
+  },[game,user]);
+
+
+
 
 
 
@@ -497,13 +593,13 @@ export default function GameProvider({
 
 
     const timer =
-      setInterval(()=>{
+      setInterval(
 
+        generateMoney,
 
-        generateMoney();
+        1000
 
-
-      },1000);
+      );
 
 
 
@@ -511,6 +607,9 @@ export default function GameProvider({
 
 
   },[]);
+
+
+
 
 
 
@@ -561,6 +660,8 @@ export default function GameProvider({
 
 
 
+
+
   useEffect(()=>{
 
 
@@ -570,19 +671,9 @@ export default function GameProvider({
 
 
     if(
-      !track
-    ){
-
-      return;
-
-    }
-
-
-
-    if(
+      track &&
       game.settings.audio.musicEnabled
     ){
-
 
       playMusic(
 
@@ -592,25 +683,17 @@ export default function GameProvider({
 
       );
 
-
     }
+
     else{
 
-
       stopMusic();
-
 
     }
 
 
 
-    return ()=>{
-
-
-      stopMusic();
-
-
-    };
+    return ()=>stopMusic();
 
 
   },[
@@ -618,6 +701,8 @@ export default function GameProvider({
     game.settings.audio.musicEnabled
 
   ]);
+
+
 
 
 
@@ -640,6 +725,8 @@ export default function GameProvider({
     game.settings.audio.musicVolume
 
   ]);
+
+
 
 
 
@@ -696,6 +783,8 @@ export default function GameProvider({
 
 
 
+
+
   return (
 
     <GameContext.Provider
@@ -735,6 +824,5 @@ export default function GameProvider({
     </GameContext.Provider>
 
   );
-
 
 }
