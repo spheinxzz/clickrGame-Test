@@ -25,13 +25,13 @@ export default function OfflineReward(){
 
 
 
-  const minutes = Math.floor(
-    offlineReward.seconds / 60
+  const hours = Math.floor(
+    offlineReward.seconds / 3600
   );
 
 
-  const hours = Math.floor(
-    minutes / 60
+  const minutes = Math.floor(
+    (offlineReward.seconds % 3600) / 60
   );
 
 
@@ -42,51 +42,123 @@ export default function OfflineReward(){
       style={{
         position:"fixed",
         inset:0,
-        background:"rgba(0,0,0,0.65)",
+        background:"rgba(0,0,0,0.75)",
+        backdropFilter:"blur(8px)",
         display:"flex",
-        justifyContent:"center",
         alignItems:"center",
-        zIndex:9999
+        justifyContent:"center",
+        zIndex:9999,
+        animation:"fadeIn .25s ease"
       }}
     >
 
       <div
         style={{
-          background:"#111827",
-          padding:"30px",
-          borderRadius:"16px",
-          width:"320px",
-          textAlign:"center",
+          width:"380px",
+          background:
+            "linear-gradient(145deg,#111827,#1f2937)",
+          borderRadius:"24px",
+          padding:"32px",
           color:"white",
-          boxShadow:"0 0 30px rgba(0,0,0,0.5)"
+          textAlign:"center",
+          boxShadow:
+            "0 20px 60px rgba(0,0,0,.6)",
+          border:
+            "1px solid rgba(255,255,255,.1)"
         }}
       >
 
-        <h2>
-          Welcome Back! 🚀
-        </h2>
+        <div
+          style={{
+            fontSize:"55px",
+            marginBottom:"10px"
+          }}
+        >
+          ⚡
+        </div>
 
 
-        <p>
-          Your company kept producing while you were away.
+        <h1
+          style={{
+            margin:0,
+            fontSize:"28px"
+          }}
+        >
+          Welcome Back!
+        </h1>
+
+
+        <p
+          style={{
+            opacity:.75,
+            marginTop:"10px"
+          }}
+        >
+          Your Byte Network kept running
+          while you were away.
         </p>
 
 
-        <h3>
-          +{Math.floor(offlineReward.amount)}
-          {" "}
-          Money
-        </h3>
+
+        <div
+          style={{
+            marginTop:"25px",
+            padding:"20px",
+            borderRadius:"18px",
+            background:
+              "rgba(255,255,255,.08)"
+          }}
+        >
+
+          <div
+            style={{
+              fontSize:"14px",
+              opacity:.7
+            }}
+          >
+            Offline Earnings
+          </div>
 
 
-        <p>
-          Time Away:
-          {" "}
+          <div
+            style={{
+              fontSize:"38px",
+              fontWeight:"bold",
+              color:"#4ade80"
+            }}
+          >
+            +{Math.floor(
+              offlineReward.amount
+            )}
+          </div>
+
+
+          <div
+            style={{
+              fontSize:"14px",
+              opacity:.7
+            }}
+          >
+            Money
+          </div>
+
+        </div>
+
+
+
+        <p
+          style={{
+            marginTop:"20px",
+            opacity:.8
+          }}
+        >
+
+          Production ran for{" "}
 
           {
             hours > 0
             ?
-            `${hours}h ${minutes % 60}m`
+            `${hours}h ${minutes}m`
             :
             `${minutes}m`
           }
@@ -94,27 +166,35 @@ export default function OfflineReward(){
         </p>
 
 
+
         <button
 
           onClick={claimOfflineReward}
 
           style={{
-            marginTop:"15px",
-            padding:"12px 25px",
-            borderRadius:"10px",
+            width:"100%",
+            marginTop:"20px",
+            padding:"15px",
+            borderRadius:"14px",
             border:"none",
             cursor:"pointer",
-            fontSize:"16px"
+            fontSize:"17px",
+            fontWeight:"bold",
+            background:
+              "linear-gradient(90deg,#22c55e,#16a34a)",
+            color:"white",
+            transition:"transform .2s"
           }}
 
         >
 
-          Claim Reward
+          Collect Earnings
 
         </button>
 
 
       </div>
+
 
     </div>
 
