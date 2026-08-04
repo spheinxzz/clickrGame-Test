@@ -2,16 +2,21 @@ import React, {
   useState
 } from "react";
 
+
 import MoneyDisplay from "./components/header/MoneyDisplay";
 import GemsDisplay from "./components/header/GemsDisplay";
 import LevelDisplay from "./components/header/LevelDisplay";
 
+
 import LeftNav from "./components/navigation/LeftNav";
 import RightNav from "./components/navigation/RightNav";
 
+
 import ClickerButton from "./components/clicker/ClickerButton";
 
+
 import NotificationDisplay from "./components/ui/NotificationDisplay";
+
 
 import Shop from "./components/menus/Shop";
 import GemShop from "./components/menus/GemShop";
@@ -20,13 +25,22 @@ import AchievementMenu from "./components/menus/AchievementMenu";
 import SettingsMenu from "./components/menus/SettingsMenu";
 import RebirthMenu from "./components/menus/RebirthMenu";
 
-export default function GameLayout() {
 
-  const [menu, setMenu] = useState(null);
+import LoginButton from "./components/auth/LoginButton";
+
+
+
+export default function GameLayout(){
+
+
+  const [menu,setMenu] = useState(null);
+
+
 
   return (
 
     <div
+
       className="
         relative
         w-screen
@@ -38,26 +52,67 @@ export default function GameLayout() {
         flex-col
         p-6
       "
+
     >
+
+
 
       <NotificationDisplay />
 
+
+
+
+
+      <div
+
+        className="
+          absolute
+          top-5
+          right-5
+          z-40
+        "
+
+      >
+
+        <LoginButton />
+
+      </div>
+
+
+
+
+
+
+
       <header
+
         className="
           flex
           justify-center
           gap-5
           items-center
         "
+
       >
 
+
         <MoneyDisplay />
+
         <GemsDisplay />
+
         <LevelDisplay />
+
 
       </header>
 
+
+
+
+
+
+
       <main
+
         className="
           flex-1
           flex
@@ -65,47 +120,144 @@ export default function GameLayout() {
           items-center
           px-8
         "
+
       >
 
+
+
         <LeftNav
-          onOpenShop={() => setMenu("shop")}
-          onOpenGemShop={() => setMenu("gemShop")}
-          onOpenSettings={() => setMenu("settings")}
+
+          onOpenShop={()=>setMenu("shop")}
+
+          onOpenGemShop={()=>setMenu("gemShop")}
+
+          onOpenSettings={()=>setMenu("settings")}
+
         />
+
+
+
+
 
         <ClickerButton />
 
+
+
+
+
         <RightNav
-          onOpenUpgrades={() => setMenu("upgrades")}
-          onOpenAchievements={() => setMenu("achievements")}
-          onOpenRebirths={() => setMenu("rebirths")}
+
+          onOpenUpgrades={()=>setMenu("upgrades")}
+
+          onOpenAchievements={()=>setMenu("achievements")}
+
+          onOpenRebirths={()=>setMenu("rebirths")}
+
         />
+
+
 
       </main>
 
-      {menu === "shop" && (
-        <Shop onClose={() => setMenu(null)} />
-      )}
 
-      {menu === "gemShop" && (
-        <GemShop onClose={() => setMenu(null)} />
-      )}
 
-      {menu === "upgrades" && (
-        <UpgradeMenu onClose={() => setMenu(null)} />
-      )}
 
-      {menu === "achievements" && (
-        <AchievementMenu onClose={() => setMenu(null)} />
-      )}
 
-      {menu === "settings" && (
-        <SettingsMenu onClose={() => setMenu(null)} />
-      )}
 
-      {menu === "rebirths" && (
-        <RebirthMenu onClose={() => setMenu(null)} />
-      )}
+
+      {
+        menu === "shop" && (
+
+          <Shop
+
+            onClose={()=>setMenu(null)}
+
+          />
+
+        )
+      }
+
+
+
+
+
+      {
+        menu === "gemShop" && (
+
+          <GemShop
+
+            onClose={()=>setMenu(null)}
+
+          />
+
+        )
+      }
+
+
+
+
+
+      {
+        menu === "upgrades" && (
+
+          <UpgradeMenu
+
+            onClose={()=>setMenu(null)}
+
+          />
+
+        )
+      }
+
+
+
+
+
+      {
+        menu === "achievements" && (
+
+          <AchievementMenu
+
+            onClose={()=>setMenu(null)}
+
+          />
+
+        )
+      }
+
+
+
+
+
+      {
+        menu === "settings" && (
+
+          <SettingsMenu
+
+            onClose={()=>setMenu(null)}
+
+          />
+
+        )
+      }
+
+
+
+
+
+      {
+        menu === "rebirths" && (
+
+          <RebirthMenu
+
+            onClose={()=>setMenu(null)}
+
+          />
+
+        )
+      }
+
+
 
     </div>
 

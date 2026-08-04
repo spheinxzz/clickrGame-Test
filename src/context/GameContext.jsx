@@ -1,12 +1,9 @@
 import React, {
   createContext,
   useState,
-  useEffect
-} from "react";
-
-
-import {
-  useContext
+  useEffect,
+  useContext,
+  useRef
 } from "react";
 
 
@@ -58,6 +55,8 @@ import {
 
 export const GameContext =
   createContext(null);
+
+
 
 
 
@@ -138,39 +137,28 @@ function mergeGame(saved){
 
     ...saved,
 
+
     upgrades:{
-
       ...defaultGame.upgrades,
-
       ...saved.upgrades
-
     },
 
 
     passiveUpgrades:{
-
       ...defaultGame.passiveUpgrades,
-
       ...saved.passiveUpgrades
-
     },
 
 
     achievements:{
-
       ...defaultGame.achievements,
-
       ...saved.achievements
-
     },
 
 
     claimedAchievements:{
-
       ...defaultGame.claimedAchievements,
-
       ...saved.claimedAchievements
-
     },
 
 
@@ -182,29 +170,20 @@ function mergeGame(saved){
 
 
       audio:{
-
         ...defaultGame.settings.audio,
-
         ...saved.settings?.audio
-
       },
 
 
       hud:{
-
         ...defaultGame.settings.hud,
-
         ...saved.settings?.hud
-
       },
 
 
       effects:{
-
         ...defaultGame.settings.effects,
-
         ...saved.settings?.effects
-
       }
 
     }
@@ -232,10 +211,8 @@ export default function GameProvider({
 
   const [game,setGame] = useState(()=>{
 
-
     const saved =
       loadGame();
-
 
 
     return saved
@@ -244,8 +221,12 @@ export default function GameProvider({
       :
       defaultGame;
 
-
   });
+
+
+
+  const [cloudLoaded,setCloudLoaded] =
+    useState(false);
 
 
 
@@ -259,6 +240,23 @@ export default function GameProvider({
 
 
 
+  const gameRef =
+    useRef(game);
+
+
+
+  useEffect(()=>{
+
+    gameRef.current = game;
+
+  },[game]);
+
+
+
+
+
+
+
 
 
   useEffect(()=>{
@@ -268,6 +266,8 @@ export default function GameProvider({
 
 
       if(!user){
+
+        setCloudLoaded(true);
 
         return;
 
@@ -291,9 +291,15 @@ export default function GameProvider({
       }
 
 
+
+      setCloudLoaded(true);
+
+
     }
 
 
+
+    setCloudLoaded(false);
 
     loadCloud();
 
@@ -419,7 +425,6 @@ export default function GameProvider({
 
     });
 
-
   }
 
 
@@ -444,6 +449,7 @@ export default function GameProvider({
       return {
 
         ...previous,
+
 
         money:
           previous.money + amount,
@@ -495,6 +501,7 @@ export default function GameProvider({
 
         ...previous,
 
+
         money:
           previous.money + amount,
 
@@ -521,6 +528,14 @@ export default function GameProvider({
   async function save(){
 
 
+    if(!cloudLoaded){
+
+      return;
+
+    }
+
+
+
     setSaving(true);
 
 
@@ -545,9 +560,7 @@ export default function GameProvider({
 
     setTimeout(()=>{
 
-
       setSaving(false);
-
 
     },500);
 
@@ -570,7 +583,7 @@ export default function GameProvider({
 
         save,
 
-        5000
+        10000
 
       );
 
@@ -579,7 +592,7 @@ export default function GameProvider({
     return ()=>clearInterval(timer);
 
 
-  },[game,user]);
+  },[user,cloudLoaded]);
 
 
 
@@ -621,7 +634,25 @@ export default function GameProvider({
 
     function close(){
 
-      saveGame(game);
+
+      saveGame(
+        gameRef.current
+      );
+
+
+
+      if(user){
+
+        saveCloudGame(
+
+          user.id,
+
+          gameRef.current
+
+        );
+
+      }
+
 
     }
 
@@ -652,7 +683,7 @@ export default function GameProvider({
     };
 
 
-  },[game]);
+  },[user]);
 
 
 
@@ -671,8 +702,10 @@ export default function GameProvider({
 
 
     if(
-      track &&
-      game.settings.audio.musicEnabled
+
+      game.settings.audio.musicEnabled &&
+      track
+
     ){
 
       playMusic(
@@ -684,16 +717,11 @@ export default function GameProvider({
       );
 
     }
-
     else{
 
       stopMusic();
 
     }
-
-
-
-    return ()=>stopMusic();
 
 
   },[
@@ -765,15 +793,11 @@ export default function GameProvider({
 
           [setting]:value
 
-
         }
-
 
       }
 
-
     }));
-
 
   }
 
@@ -824,5 +848,6 @@ export default function GameProvider({
     </GameContext.Provider>
 
   );
+
 
 }
