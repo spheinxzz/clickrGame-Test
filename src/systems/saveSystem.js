@@ -1,8 +1,12 @@
 const SAVE_KEY =
+
   "clickerGameSave";
 
 
-const SAVE_VERSION = 2;
+
+const SAVE_VERSION = 3;
+
+
 
 
 
@@ -17,108 +21,155 @@ function migrateSave(save){
     saveVersion:SAVE_VERSION,
 
 
+
     money:
+
       save.money ?? 0,
 
 
+
     gems:
+
       save.gems ?? 0,
 
 
+
     level:
+
       save.level ?? 1,
 
 
+
     totalClicks:
+
       save.totalClicks ?? 0,
 
 
+
     totalMoneyEarned:
+
       save.totalMoneyEarned ?? 0,
 
 
+
     upgrades:
+
       save.upgrades ?? {},
 
 
+
     passiveUpgrades:
+
       save.passiveUpgrades ?? {},
 
 
+
     achievements:
+
       save.achievements ?? {},
 
 
+
     claimedAchievements:
+
       save.claimedAchievements ?? {},
 
 
+
+    lastActive:
+
+      save.lastActive ??
+
+      Date.now(),
+
+
+
     settings:{
-
-
-      ...save.settings,
 
 
       audio:{
 
 
         masterVolume:
+
           save.settings?.audio?.masterVolume ?? 100,
 
 
+
         musicVolume:
+
           save.settings?.audio?.musicVolume ?? 80,
 
 
+
         musicEnabled:
+
           save.settings?.audio?.musicEnabled ?? false,
 
 
+
         clickSounds:
+
           save.settings?.audio?.clickSounds ?? true
 
 
       },
 
 
+
       hud:{
 
 
         hudScale:
+
           save.settings?.hud?.hudScale ?? 100,
 
 
+
         showMoney:
+
           save.settings?.hud?.showMoney ?? true,
 
 
+
         showGems:
+
           save.settings?.hud?.showGems ?? true,
 
 
+
         showLevel:
+
           save.settings?.hud?.showLevel ?? true
 
 
       },
 
 
+
       effects:{
 
 
         particles:
+
           save.settings?.effects?.particles ?? true,
 
 
+
         floatingText:
+
           save.settings?.effects?.floatingText ?? true,
 
 
+
         clickAnimation:
+
           save.settings?.effects?.clickAnimation ?? true,
 
 
+
         glowEffects:
+
           save.settings?.effects?.glowEffects ?? true
 
 
@@ -140,6 +191,7 @@ function migrateSave(save){
 
 
 
+
 export function saveGame(game){
 
 
@@ -152,10 +204,19 @@ export function saveGame(game){
       ...game,
 
 
+
       saveVersion:SAVE_VERSION,
 
 
+
       lastSave:
+
+        Date.now(),
+
+
+
+      lastActive:
+
         Date.now()
 
 
@@ -196,8 +257,8 @@ export function saveGame(game){
 
   }
 
-
 }
+
 
 
 
@@ -213,41 +274,55 @@ export function loadGame(){
 
 
     const data =
+
       localStorage.getItem(
+
         SAVE_KEY
+
       );
 
 
 
     if(!data){
 
+
       return null;
+
 
     }
 
 
 
     const parsed =
+
       JSON.parse(data);
 
 
 
     if(
+
       typeof parsed !== "object" ||
+
       parsed === null
+
     ){
 
+
       return null;
+
 
     }
 
 
 
-    return migrateSave(parsed);
+    return migrateSave(
+
+      parsed
+
+    );
 
 
   }
-
 
   catch(error){
 
@@ -261,14 +336,13 @@ export function loadGame(){
     );
 
 
-
     return null;
 
 
   }
 
-
 }
+
 
 
 
@@ -290,11 +364,11 @@ export function deleteSave(){
     );
 
 
+
     return true;
 
 
   }
-
 
   catch(error){
 
@@ -313,8 +387,8 @@ export function deleteSave(){
 
   }
 
-
 }
+
 
 
 

@@ -3,11 +3,15 @@ import { supabase } from "../supabase/client";
 
 
 export async function saveCloudGame(
+
   userId,
+
   game
+
 ){
 
-  if(!userId){
+
+  if(!userId || !game){
 
     return false;
 
@@ -18,42 +22,50 @@ export async function saveCloudGame(
   try {
 
 
-    const { error } =
+    const {
 
-      await supabase
+      error
 
-        .from("saves")
+    } = await supabase
 
-        .upsert(
+      .from("saves")
 
-          {
+      .upsert(
 
-            user_id:userId,
+        {
 
-            data:game,
+          user_id:userId,
 
-            updated_at:new Date()
+          data:game,
 
-          },
+          updated_at:new Date()
 
-          {
+        },
 
-            onConflict:"user_id"
+        {
 
-          }
+          onConflict:"user_id"
 
-        );
+        }
+
+      );
 
 
 
     if(error){
 
+
       console.error(
+
         "Cloud save failed:",
+
         error
+
       );
 
+
       return false;
+
 
     }
 
@@ -68,8 +80,11 @@ export async function saveCloudGame(
 
 
     console.error(
+
       "Cloud save error:",
+
       error
+
     );
 
 
@@ -89,8 +104,11 @@ export async function saveCloudGame(
 
 
 export async function loadCloudGame(
+
   userId
+
 ){
+
 
   if(!userId){
 
@@ -103,31 +121,44 @@ export async function loadCloudGame(
   try {
 
 
-    const { data,error } =
+    const {
 
-      await supabase
+      data,
 
-        .from("saves")
+      error
 
-        .select("data")
+    } = await supabase
 
-        .eq(
-          "user_id",
-          userId
-        )
+      .from("saves")
 
-        .maybeSingle();
+      .select("data")
+
+      .eq(
+
+        "user_id",
+
+        userId
+
+      )
+
+      .maybeSingle();
 
 
 
     if(error){
 
+
       console.error(
+
         "Cloud load failed:",
+
         error
+
       );
 
+
       return null;
+
 
     }
 
@@ -142,8 +173,11 @@ export async function loadCloudGame(
 
 
     console.error(
+
       "Cloud load error:",
+
       error
+
     );
 
 
@@ -163,8 +197,11 @@ export async function loadCloudGame(
 
 
 export async function deleteCloudGame(
+
   userId
+
 ){
+
 
   if(!userId){
 
@@ -177,29 +214,40 @@ export async function deleteCloudGame(
   try {
 
 
-    const { error } =
+    const {
 
-      await supabase
+      error
 
-        .from("saves")
+    } = await supabase
 
-        .delete()
+      .from("saves")
 
-        .eq(
-          "user_id",
-          userId
-        );
+      .delete()
+
+      .eq(
+
+        "user_id",
+
+        userId
+
+      );
 
 
 
     if(error){
 
+
       console.error(
+
         "Cloud delete failed:",
+
         error
+
       );
 
+
       return false;
+
 
     }
 
@@ -214,8 +262,11 @@ export async function deleteCloudGame(
 
 
     console.error(
+
       "Cloud delete error:",
+
       error
+
     );
 
 

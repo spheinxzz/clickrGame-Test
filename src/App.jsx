@@ -7,6 +7,8 @@ import GameLayout from "./GameLayout";
 
 import setupAudio from "./systems/audioSetup";
 
+import OfflineReward from "./components/ui/OfflineReward";
+
 
 
 

@@ -12,15 +12,67 @@ import {
 
 
 
+
+
 function getLevel(level){
 
+
   const value =
+
     Number(level);
 
 
+
   return Number.isFinite(value)
+
     ? value
+
     : 0;
+
+
+}
+
+
+
+
+
+
+
+
+
+function findUpgrade(id){
+
+
+  return upgrades.find(
+
+    item =>
+
+      item.id === id
+
+  );
+
+
+}
+
+
+
+
+
+
+
+
+
+function findPassiveUpgrade(id){
+
+
+  return passiveUpgrades.find(
+
+    item =>
+
+      item.id === id
+
+  );
+
 
 }
 
@@ -40,32 +92,40 @@ export function getClickPower(game){
 
 
   Object.entries(
+
     game.upgrades || {}
+
   )
-  .forEach(([id, level])=>{
+
+  .forEach(([id,level])=>{
 
 
     level =
+
       getLevel(level);
 
 
 
     const upgrade =
-      upgrades.find(
-        item =>
-          item.id === id
-      );
+
+      findUpgrade(id);
 
 
 
     if(
+
       upgrade &&
+
       upgrade.type === "clickPower"
+
     ){
 
 
       power +=
-        upgrade.amount * level;
+
+        upgrade.amount *
+
+        level;
 
 
     }
@@ -76,8 +136,12 @@ export function getClickPower(game){
 
 
 
+  return Number.isFinite(power)
 
-  return power;
+    ? power
+
+    : 1;
+
 
 }
 
@@ -97,32 +161,40 @@ export function getMoneyMultiplier(game){
 
 
   Object.entries(
+
     game.upgrades || {}
+
   )
-  .forEach(([id, level])=>{
+
+  .forEach(([id,level])=>{
 
 
     level =
+
       getLevel(level);
 
 
 
     const upgrade =
-      upgrades.find(
-        item =>
-          item.id === id
-      );
+
+      findUpgrade(id);
 
 
 
     if(
+
       upgrade &&
+
       upgrade.type === "moneyMultiplier"
+
     ){
 
 
       multiplier +=
-        upgrade.amount * level;
+
+        upgrade.amount *
+
+        level;
 
 
     }
@@ -133,8 +205,12 @@ export function getMoneyMultiplier(game){
 
 
 
+  return Number.isFinite(multiplier)
 
-  return multiplier;
+    ? multiplier
+
+    : 1;
+
 
 }
 
@@ -154,32 +230,40 @@ export function getCriticalChance(game){
 
 
   Object.entries(
+
     game.upgrades || {}
+
   )
-  .forEach(([id, level])=>{
+
+  .forEach(([id,level])=>{
 
 
     level =
+
       getLevel(level);
 
 
 
     const upgrade =
-      upgrades.find(
-        item =>
-          item.id === id
-      );
+
+      findUpgrade(id);
 
 
 
     if(
+
       upgrade &&
+
       upgrade.type === "criticalChance"
+
     ){
 
 
       chance +=
-        upgrade.amount * level;
+
+        upgrade.amount *
+
+        level;
 
 
     }
@@ -190,11 +274,14 @@ export function getCriticalChance(game){
 
 
 
-
   return Math.min(
-    chance,
+
+    Math.max(chance,0),
+
     1
+
   );
+
 
 }
 
@@ -214,32 +301,40 @@ export function getCriticalMultiplier(game){
 
 
   Object.entries(
+
     game.upgrades || {}
+
   )
-  .forEach(([id, level])=>{
+
+  .forEach(([id,level])=>{
 
 
     level =
+
       getLevel(level);
 
 
 
     const upgrade =
-      upgrades.find(
-        item =>
-          item.id === id
-      );
+
+      findUpgrade(id);
 
 
 
     if(
+
       upgrade &&
+
       upgrade.type === "criticalMultiplier"
+
     ){
 
 
       multiplier +=
-        upgrade.amount * level;
+
+        upgrade.amount *
+
+        level;
 
 
     }
@@ -250,8 +345,12 @@ export function getCriticalMultiplier(game){
 
 
 
+  return Number.isFinite(multiplier)
 
-  return multiplier;
+    ? multiplier
+
+    : 2;
+
 
 }
 
@@ -267,25 +366,31 @@ export function calculateClickValue(game){
 
 
   let amount =
+
     getClickPower(game);
 
 
 
   amount *=
+
     getMoneyMultiplier(game);
 
 
 
 
-
   if(
+
     Math.random()
+
     <
+
     getCriticalChance(game)
+
   ){
 
 
     amount *=
+
       getCriticalMultiplier(game);
 
 
@@ -294,20 +399,22 @@ export function calculateClickValue(game){
 
 
 
-
   if(
+
     !Number.isFinite(amount)
+
   ){
 
+
     return 0;
+
 
   }
 
 
 
-
-
   return Math.floor(amount);
+
 
 }
 
@@ -325,28 +432,29 @@ export function calculateCPS(game){
   let cps = 0;
 
 
+
   let multiplier = 1;
 
 
 
-
-
   Object.entries(
+
     game.passiveUpgrades || {}
+
   )
-  .forEach(([id, level])=>{
+
+  .forEach(([id,level])=>{
 
 
     level =
+
       getLevel(level);
 
 
 
     const upgrade =
-      passiveUpgrades.find(
-        item =>
-          item.id === id
-      );
+
+      findPassiveUpgrade(id);
 
 
 
@@ -358,30 +466,36 @@ export function calculateCPS(game){
 
 
 
-
-
     if(
+
       upgrade.type === "cps"
+
     ){
 
 
       cps +=
-        upgrade.amount * level;
+
+        upgrade.amount *
+
+        level;
 
 
     }
 
 
 
-
-
     if(
+
       upgrade.type === "cpsMultiplier"
+
     ){
 
 
       multiplier +=
-        upgrade.amount * level;
+
+        upgrade.amount *
+
+        level;
 
 
     }
@@ -394,14 +508,20 @@ export function calculateCPS(game){
 
 
   const result =
-    cps * multiplier;
+
+    cps *
+
+    multiplier;
 
 
 
 
 
   return Number.isFinite(result)
+
     ? result
+
     : 0;
+
 
 }

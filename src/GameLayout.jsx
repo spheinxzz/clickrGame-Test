@@ -7,6 +7,8 @@ import MoneyDisplay from "./components/header/MoneyDisplay";
 import GemsDisplay from "./components/header/GemsDisplay";
 import LevelDisplay from "./components/header/LevelDisplay";
 
+import OfflineReward from "./components/ui/OfflineReward";
+
 
 import LeftNav from "./components/navigation/LeftNav";
 import RightNav from "./components/navigation/RightNav";
@@ -58,6 +60,8 @@ export default function GameLayout(){
 
 
       <NotificationDisplay />
+
+      <OfflineReward />
 
 
 
