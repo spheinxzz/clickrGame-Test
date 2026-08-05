@@ -22,96 +22,99 @@ import RebirthMenu from "./components/menus/RebirthMenu";
 import LeaderboardMenu from "./components/menus/LeaderboardMenu";
 
 import LoginButton from "./components/auth/LoginButton";
+import { LeaderboardProvider } from "./context/LeaderboardContext";
 
 export default function GameLayout() {
   const [menu, setMenu] = useState(null);
 
   return (
-    <div
-      className="
-        relative
-        w-screen
-        h-screen
-        bg-[#242222]
-        text-white
-        overflow-hidden
-        flex
-        flex-col
-        p-6
-      "
-    >
-      <NotificationDisplay />
-
-      <OfflineReward />
-
+    <LeaderboardProvider>
       <div
         className="
-          absolute
-          top-5
-          right-5
-          z-40
+          relative
+          w-screen
+          h-screen
+          bg-[#242222]
+          text-white
+          overflow-hidden
+          flex
+          flex-col
+          p-6
         "
       >
-        <LoginButton />
+        <NotificationDisplay />
+
+        <OfflineReward />
+
+        <div
+          className="
+            absolute
+            top-5
+            right-5
+            z-40
+          "
+        >
+          <LoginButton />
+        </div>
+
+        <header
+          className="
+            flex
+            justify-center
+            gap-5
+            items-center
+          "
+        >
+          <MoneyDisplay />
+
+          <GemsDisplay />
+
+          <LevelDisplay />
+        </header>
+
+        <main
+          className="
+            flex-1
+            flex
+            justify-between
+            items-center
+            px-8
+          "
+        >
+          <LeftNav
+            onOpenShop={() => setMenu("shop")}
+            onOpenGemShop={() => setMenu("gemShop")}
+            onOpenSettings={() => setMenu("settings")}
+            onOpenLeaderboard={() => setMenu("leaderboard")}
+          />
+
+          <ClickerButton />
+
+          <RightNav
+            onOpenUpgrades={() => setMenu("upgrades")}
+            onOpenAchievements={() => setMenu("achievements")}
+            onOpenRebirths={() => setMenu("rebirths")}
+          />
+        </main>
+
+        {menu === "shop" && <Shop onClose={() => setMenu(null)} />}
+
+        {menu === "gemShop" && <GemShop onClose={() => setMenu(null)} />}
+
+        {menu === "upgrades" && <UpgradeMenu onClose={() => setMenu(null)} />}
+
+        {menu === "achievements" && (
+          <AchievementMenu onClose={() => setMenu(null)} />
+        )}
+
+        {menu === "settings" && <SettingsMenu onClose={() => setMenu(null)} />}
+
+        {menu === "rebirths" && <RebirthMenu onClose={() => setMenu(null)} />}
+
+        {menu === "leaderboard" && (
+          <LeaderboardMenu onClose={() => setMenu(null)} />
+        )}
       </div>
-
-      <header
-        className="
-          flex
-          justify-center
-          gap-5
-          items-center
-        "
-      >
-        <MoneyDisplay />
-
-        <GemsDisplay />
-
-        <LevelDisplay />
-      </header>
-
-      <main
-        className="
-          flex-1
-          flex
-          justify-between
-          items-center
-          px-8
-        "
-      >
-        <LeftNav
-          onOpenShop={() => setMenu("shop")}
-          onOpenGemShop={() => setMenu("gemShop")}
-          onOpenSettings={() => setMenu("settings")}
-          onOpenLeaderboard={() => setMenu("leaderboard")}
-        />
-
-        <ClickerButton />
-
-        <RightNav
-          onOpenUpgrades={() => setMenu("upgrades")}
-          onOpenAchievements={() => setMenu("achievements")}
-          onOpenRebirths={() => setMenu("rebirths")}
-        />
-      </main>
-
-      {menu === "shop" && <Shop onClose={() => setMenu(null)} />}
-
-      {menu === "gemShop" && <GemShop onClose={() => setMenu(null)} />}
-
-      {menu === "upgrades" && <UpgradeMenu onClose={() => setMenu(null)} />}
-
-      {menu === "achievements" && (
-        <AchievementMenu onClose={() => setMenu(null)} />
-      )}
-
-      {menu === "settings" && <SettingsMenu onClose={() => setMenu(null)} />}
-
-      {menu === "rebirths" && <RebirthMenu onClose={() => setMenu(null)} />}
-
-      {menu === "leaderboard" && (
-        <LeaderboardMenu onClose={() => setMenu(null)} />
-      )}
-    </div>
+    </LeaderboardProvider>
   );
 }
