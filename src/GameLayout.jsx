@@ -26,6 +26,7 @@ import UpgradeMenu from "./components/menus/UpgradeMenu";
 import AchievementMenu from "./components/menus/AchievementMenu";
 import SettingsMenu from "./components/menus/SettingsMenu";
 import RebirthMenu from "./components/menus/RebirthMenu";
+import LeaderboardMenu from "./components/menus/LeaderboardMenu";
 
 
 import LoginButton from "./components/auth/LoginButton";
@@ -136,6 +137,8 @@ export default function GameLayout(){
           onOpenGemShop={()=>setMenu("gemShop")}
 
           onOpenSettings={()=>setMenu("settings")}
+
+          onOpenLeaderboard={()=>setMenu("leaderboard")}
 
         />
 
