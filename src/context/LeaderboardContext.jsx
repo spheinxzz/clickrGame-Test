@@ -15,19 +15,20 @@ export function LeaderboardProvider({ children }) {
       const { data, error } = await supabase
         .from("leaderboard")
         .select("*")
-        .order("score", { ascending: false })
+        .order("money", { ascending: false })
         .limit(50);
 
       if (error) throw error;
       setScores(data || []);
     } catch (err) {
+      console.error("Leaderboard fetch error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const submitScore = async (score, username) => {
+  const submitScore = async (moneyAmount, username) => {
     try {
       const { data: userData } = await supabase.auth.getUser();
       const user = userData?.user;
@@ -44,7 +45,7 @@ export function LeaderboardProvider({ children }) {
         {
           user_id: user.id,
           username: userDisplayName,
-          score: score,
+          money: moneyAmount,
           updated_at: new Date().toISOString(),
         },
         { onConflict: "user_id" }
@@ -79,9 +80,7 @@ export function LeaderboardProvider({ children }) {
 export function useLeaderboard() {
   const context = useContext(LeaderboardContext);
   if (!context) {
-    throw new Error(
-      "useLeaderboard must be used within a LeaderboardProvider"
-    );
+    throw new Error("useLeaderboard must be used within a LeaderboardProvider");
   }
   return context;
 }

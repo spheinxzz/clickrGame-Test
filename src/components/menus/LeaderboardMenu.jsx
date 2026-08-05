@@ -27,7 +27,7 @@ export function LeaderboardMenu({ onClose }) {
         <div className="grid grid-cols-12 text-xs uppercase font-semibold text-gray-400 px-3 py-1">
           <span className="col-span-2">Rank</span>
           <span className="col-span-6">Player</span>
-          <span className="col-span-4 text-right">Score</span>
+          <span className="col-span-4 text-right">Money</span>
         </div>
 
         <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-1 custom-scrollbar">
@@ -66,7 +66,7 @@ export function LeaderboardMenu({ onClose }) {
                     {entry.username || "Anonymous"}
                   </span>
                   <span className="col-span-4 text-right font-bold text-emerald-400 text-sm truncate">
-                    {Number(entry.score || 0).toLocaleString()}
+                    ${Number(entry.money || 0).toLocaleString()}
                   </span>
                 </div>
               );
