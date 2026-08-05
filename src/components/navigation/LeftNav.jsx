@@ -2,7 +2,7 @@ import React from 'react';
 import MenuButton from './MenuButton';
 import IconPlaceholder from '../ui/IconPlaceholder';
 
-export default function LeftNav({ onOpenShop, onOpenGemShop, onOpenSettings, opOpenLeaderboard }) {
+export default function LeftNav({ onOpenShop, onOpenGemShop, onOpenSettings, onOpenLeaderboard }) {
   return (
     <aside className="flex flex-col gap-4">
       <MenuButton 
@@ -30,8 +30,8 @@ export default function LeftNav({ onOpenShop, onOpenGemShop, onOpenSettings, opO
         label="Leaderboard"
         color="yellow"
         badge="New"
-        onlick={onOpenLeaderboard}
-        />
+        onClick={onOpenLeaderboard}
+      />
     </aside>
   );
 }
