@@ -1,34 +1,33 @@
 import React from 'react';
 import MenuButton from './MenuButton';
-import IconPlaceholder from '../ui/IconPlaceholder';
+import { ASSET_PATHS } from '../../../public/assets/index.js';
 
 export default function LeftNav({ onOpenShop, onOpenGemShop, onOpenSettings, onOpenLeaderboard }) {
   return (
     <aside className="flex flex-col gap-4">
       <MenuButton 
-        icon={<IconPlaceholder name="SHP" />} 
+        iconSrc={ASSET_PATHS.icons.shop} 
         label="Shop" 
         color="emerald" 
         onClick={onOpenShop} 
       />
       <MenuButton 
-        icon={<IconPlaceholder name="GEM" />} 
+        iconSrc={ASSET_PATHS.icons.gem} 
         label="Gem Shop" 
         color="purple" 
         badge="HOT"
         onClick={onOpenGemShop} 
       />
       <MenuButton 
-        icon={<IconPlaceholder name="SET" />} 
+        iconSrc={ASSET_PATHS.icons.settings} 
         label="Settings" 
         color="gray" 
         onClick={onOpenSettings} 
       />
-
       <MenuButton
-        icon={<IconPlaceholder name="#" />}
+        iconSrc={ASSET_PATHS.icons.leaderboard}
         label="Leaderboard"
-        color="yellow"
+        color="amber"
         badge="New"
         onClick={onOpenLeaderboard}
       />

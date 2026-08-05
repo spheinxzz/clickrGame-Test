@@ -1,27 +1,27 @@
 import React from 'react';
 import MenuButton from './MenuButton';
-import IconPlaceholder from '../ui/IconPlaceholder';
+import { ASSET_PATHS } from '../../../public/assets/index.js';
 
 export default function RightNav({ onOpenUpgrades, onOpenAchievements, onOpenRebirths }) {
   return (
     <aside className="flex flex-col gap-4">
       <MenuButton 
-        icon={<IconPlaceholder name="UPG" />} 
+        iconSrc={ASSET_PATHS.icons.upgrades} 
         label="Upgrades" 
         color="amber" 
         onClick={onOpenUpgrades} 
       />
       <MenuButton 
-        icon={<IconPlaceholder name="ACH" />}
-        label="Achievements"
-        color="indigo"
-        onClick={onOpenAchievements}
+        iconSrc={ASSET_PATHS.icons.achievements} 
+        label="Achievements" 
+        color="indigo" 
+        onClick={onOpenAchievements} 
       />
-      <MenuButton
-        icon={<IconPlaceholder name="REB" />}
-        label="Rebirths"
-        color="rose"
-        onClick={onOpenRebirths}
+      <MenuButton 
+        iconSrc={ASSET_PATHS.icons.rebirths} 
+        label="Rebirths" 
+        color="rose" 
+        onClick={onOpenRebirths} 
       />
     </aside>
   );
